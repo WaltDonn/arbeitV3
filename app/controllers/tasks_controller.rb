@@ -41,8 +41,6 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
     authorize! :create, @task
-    upload_specsheet(params[:task][:specsheet], true)
-    @task.specsheet = params[:task][:specsheet].original_filename unless params[:task][:specsheet].nil?
     @task.created_by = current_user.id
     if @task.save
       # if saved to database
@@ -59,9 +57,7 @@ class TasksController < ApplicationController
 
   def update
     authorize! :update, @task
-    upload_specsheet(params[:task][:specsheet], true)
     params[:task].each { |attribute,value| @task[attribute] = value }
-    @task.specsheet = params[:task][:specsheet].original_filename unless params[:task][:specsheet].nil?
     @task.due_on = convert_to_datetime(params[:task][:due_string])
     @task.due_string = params[:task][:due_string]
     if params[:task][:completed] == "1"
@@ -136,18 +132,6 @@ class TasksController < ApplicationController
     end
   end
 
-  def upload_specsheet(file, backup)
-    if file
-      Task.save(file, backup)
-    else
-      flash[:error] = "Something went wrong with file upload"
-    end
-  end
-
-  def download_specsheet
-    send_file(Rails.root + "public/uploads/#{@task.specsheet}", filename: @task.specsheet, type: "application/pdf", disposition: "inline")
-  end
-
   private
     def convert_due_on
       params[:task][:due_on] = convert_to_date(params[:task][:due_on]) unless params[:task][:due_on].blank?
@@ -159,6 +143,6 @@ class TasksController < ApplicationController
 
     def task_params
       #convert_due_on
-      params.require(:task).permit(:name, :due_on, :due_string, :project_id, :completed, :completed_by, :created_by, :priority, :specsheet)
+      params.require(:task).permit(:name, :due_on, :due_string, :project_id, :completed, :completed_by, :created_by, :priority)
     end
 end

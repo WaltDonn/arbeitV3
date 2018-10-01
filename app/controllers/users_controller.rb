@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
+    @user = User.new(bad_user_params)
     @user.first_name = user_sanitize(@user.first_name)
     @user.last_name = user_sanitize(@user.last_name)
     @user.username = user_sanitize(@user.username)
@@ -63,6 +63,10 @@ class UsersController < ApplicationController
   private
     def set_user
       @user = User.find(params[:id])
+    end
+
+    def bad_user_params
+      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :role, :active)
     end
 
     def user_params

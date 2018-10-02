@@ -1,3 +1,6 @@
+<% if !current_user  %>
+  <p>Uh oh! This page should only be seen by authenticated users... <br>Flag{CSDUZYIKZCC8W3T}<p>
+<% end %>
 <%= render partial: "partials/structure1", locals: {model_name: "user",
                                                          primary: "users_list",
                                                          secondary: nil,

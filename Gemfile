@@ -47,6 +47,7 @@ gem 'materialize-sass', '0.100.2'
 gem 'simple_form', '3.5.0'
 gem 'materialize-form', '1.0.8'
 
+gem 'rack-heartbeat'
 
 # Gems used only in testing
 group :test do
